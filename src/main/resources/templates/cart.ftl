@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Fair Trade Garden</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <style>
@@ -142,7 +143,7 @@
                     <div class="d-flex justify-content-between information"><span>${item.name}</span><span>${item.price}€</span></div>
                     </#list>
                     <form method="post" action="/pay-by-cash">
-                        <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="button"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
+                        <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
                     </form>
                 </div>
             </div>

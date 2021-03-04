@@ -6,7 +6,6 @@ import daikon.core.Response
 import daikon.core.RouteAction
 import daikon.freemarker.html
 import topinambur.http
-import java.sql.DriverManager
 
 class CartPage : RouteAction {
 
@@ -15,7 +14,7 @@ class CartPage : RouteAction {
         val cartItems = loadCart()
 
         products.forEach {
-            val response = "https://www.random.org/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new&id=${it.name}".http.get()
+            val response = "https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new&id=${it.name}".http.get()
             val price = response.body.replace("\n", "").toInt()
             it.withPrice(price)
         }
@@ -27,10 +26,7 @@ class CartPage : RouteAction {
     }
 
     private fun loadCart(): List<CartItem> {
-        val url = "jdbc:postgresql://localhost:5432/shop?user=postgres&password=tdd"
-        val conn = DriverManager.getConnection(url)
-
-        val results = conn.prepareStatement("SELECT * FROM cart").executeQuery()
+        val results = DbConnection().create().prepareStatement("SELECT * FROM cart").executeQuery()
 
         val items = mutableListOf<CartItem>()
         while (results.next()) {
@@ -41,10 +37,7 @@ class CartPage : RouteAction {
     }
 
     private fun loadProducts(): List<Product> {
-        val url = "jdbc:postgresql://localhost:5432/shop?user=postgres&password=tdd"
-        val conn = DriverManager.getConnection(url)
-
-        val results = conn.prepareStatement("SELECT * FROM products").executeQuery()
+        val results = DbConnection().create().prepareStatement("SELECT * FROM products").executeQuery()
 
         val items = mutableListOf<Product>()
         while (results.next()) {
