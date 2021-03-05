@@ -14,19 +14,23 @@ class CartPage : RouteAction {
         val cartItems = loadCart()
 
         products.forEach {
-            val response = "https://www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new&id=${it.name}".http.get()
-            val price = response.body.replace("\n", "").toInt()
+            val response = "http://www.randomnumberapi.com/api/v1.0/random?min=1&max=10&id=${it.name}".http.get()
+            val price = response.body.replace("[", "").replace("]", "").toInt()
             it.withPrice(price)
         }
 
-        response.html("cart", hashMapOf(
-            "products" to products,
-            "cartItems" to cartItems
-        ))
+        response.html(
+            "cart", hashMapOf(
+                "products" to products,
+                "cartItems" to cartItems
+            )
+        )
     }
 
     private fun loadCart(): List<CartItem> {
-        val results = DbConnection().create().prepareStatement("SELECT * FROM cart").executeQuery()
+        val results = DbConnection().create().use {
+            it.prepareStatement("SELECT * FROM cart").executeQuery()
+        }
 
         val items = mutableListOf<CartItem>()
         while (results.next()) {
@@ -37,7 +41,9 @@ class CartPage : RouteAction {
     }
 
     private fun loadProducts(): List<Product> {
-        val results = DbConnection().create().prepareStatement("SELECT * FROM products").executeQuery()
+        val results = DbConnection().create().use {
+            it.prepareStatement("SELECT * FROM products").executeQuery()
+        }
 
         val items = mutableListOf<Product>()
         while (results.next()) {

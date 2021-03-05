@@ -14,6 +14,6 @@ class PayByCashAction : RouteAction {
     }
 
     private fun emptyCart() {
-        DbConnection().create().prepareStatement("TRUNCATE TABLE cart").execute()
+        DbConnection().create().use { it.prepareStatement("TRUNCATE TABLE cart").execute() }
     }
 }

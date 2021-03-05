@@ -1,5 +1,5 @@
-plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+plugins {sourceCompatibility = 11.0
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
 }
 
 group 'tdd.real-life'
@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     implementation 'com.github.DaikonWeb:daikon:1.9.0'
     implementation 'com.github.DaikonWeb:daikon-freemarker:1.9.0'
     implementation 'com.github.DaikonWeb:topinambur:1.4.0'
