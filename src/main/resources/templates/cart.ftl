@@ -127,7 +127,7 @@
                                 <form method="post" action="add-to-cart">
                                     <input type="hidden" name="name" value="${product.name}">
                                     <input type="hidden" name="price" value="${product.price}"">
-                                    <button type="submit" class="btn btn-primary">+</button>
+                                    <button type="submit" class="btn btn-primary" id="button-${product.name}">+</button>
                                 </form>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                     <div class="d-flex justify-content-between information"><span>${item.name}</span><span>${item.price}€</span></div>
                     </#list>
                     <form method="post" action="/pay-by-cash">
-                        <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
+                        <button id="button-cash" class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
                     </form>
                 </div>
             </div>
