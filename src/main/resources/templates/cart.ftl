@@ -140,8 +140,10 @@
                 <div class="payment-info">
                     <h2>Cart</h2>
                     <#list cartItems as item>
-                    <div class="d-flex justify-content-between information"><span>${item.name}</span><span>${item.price}€</span></div>
+                    <div class="d-flex justify-content-between information"><span class="cart-item">${item.name}</span><span>${item.price}€</span></div>
                     </#list>
+                    <hr>
+                    <div class="d-flex justify-content-between information"><span style="font-size:1.2em;">TOTAL</span><span id="total" style="font-size:1.2em;">${total}€</span></div>
                     <form method="post" action="/pay-by-cash">
                         <button id="button-cash" class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
                     </form>

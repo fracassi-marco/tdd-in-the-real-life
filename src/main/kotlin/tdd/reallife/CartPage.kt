@@ -22,7 +22,8 @@ class CartPage : RouteAction {
         response.html(
             "cart", hashMapOf(
                 "products" to products,
-                "cartItems" to cartItems
+                "cartItems" to cartItems,
+                "total" to cartItems.sumBy { it.price }
             )
         )
     }
