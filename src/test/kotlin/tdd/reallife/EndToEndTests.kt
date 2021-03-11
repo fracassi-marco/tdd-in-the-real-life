@@ -1,5 +1,7 @@
 package tdd.reallife
 
+import daikon.HttpServer
+import daikon.core.HttpStatus.OK_200
 import io.github.bonigarcia.wdm.WebDriverManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -40,6 +42,21 @@ class EndToEndTests {
 
         browser.findElement(id("button-cash")).click()
         assertThat(browser.findElements(className("cart-item"))).isEmpty()
+    }
+
+    @Test
+    fun payByExternalSystem() {
+        HttpServer(4546) {
+            post("/") { _, res, _ -> res.status(OK_200) }
+        }.start().use {
+            browser.get("http://localhost:4545/")
+            browser.findElement(id("button-Potato")).click()
+            assertThat(browser.findElements(className("cart-item")).single().text).isEqualTo("Potato")
+
+            browser.findElement(id("button-external")).click()
+            assertThat(browser.findElement(id("button-external"))).isNotNull
+            assertThat(browser.findElements(className("cart-item"))).isEmpty()
+        }
     }
 
     private fun cleanCart() {

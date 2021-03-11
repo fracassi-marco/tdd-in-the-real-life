@@ -147,6 +147,10 @@
                     <form method="post" action="/pay-by-cash">
                         <button id="button-cash" class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
                     </form>
+                    <form method="post" action="/pay-external">
+                        <input type="hidden" name="price" value="${total}">
+                        <button id="button-external" class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by card<i class="fa fa-long-arrow-right ml-1"></i></span></button>
+                    </form>
                 </div>
             </div>
         </div>
