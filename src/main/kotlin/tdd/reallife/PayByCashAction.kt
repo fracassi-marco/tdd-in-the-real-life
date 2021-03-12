@@ -8,12 +8,8 @@ import daikon.core.RouteAction
 class PayByCashAction : RouteAction {
 
     override fun handle(request: Request, response: Response, context: Context) {
-        emptyCart()
+        DbCartRepository().empty()
 
         response.redirect("http://localhost:4545/")
-    }
-
-    private fun emptyCart() {
-        DbConnection().create().use { it.prepareStatement("TRUNCATE TABLE cart").execute() }
     }
 }

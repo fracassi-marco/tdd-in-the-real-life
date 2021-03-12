@@ -12,6 +12,7 @@ class App : AutoCloseable {
         get("/", CartPage())
         post("/add-to-cart", AddToCartAction())
         post("/pay-by-cash", PayByCashAction())
+        post("/pay-external", PayExternalAction(HttpPaymentAdapter("http://localhost:4546"), DbCartRepository()))
     }
 
     fun start() {

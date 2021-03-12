@@ -8,6 +8,7 @@
 * no tests
 * mixin of data access and business logic
 * random prices
+* OOP?
 
 ## Desired features:
 * pay with external service and if payment succeeded empty cart

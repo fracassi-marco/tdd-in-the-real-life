@@ -14,8 +14,8 @@ class CartPage : RouteAction {
         val cartItems = loadCart()
 
         products.forEach {
-            val response = "http://www.randomnumberapi.com/api/v1.0/random?min=1&max=10&id=${it.name}".http.get()
-            val price = response.body.replace("[", "").replace("]", "").toInt()
+            val priceResponse = "http://www.randomnumberapi.com/api/v1.0/random?min=1&max=10&id=${it.name}".http.get()
+            val price = priceResponse.body.replace("[", "").replace("]", "").toInt()
             it.withPrice(price)
         }
 
