@@ -56,6 +56,8 @@ class EndToEndTests {
             browser.findElement(id("button-external")).click()
             assertThat(browser.findElement(id("button-external"))).isNotNull
             assertThat(browser.findElements(className("cart-item"))).isEmpty()
+
+            assertThat(BillFromStore().exist("bill_1.txt")).isNotNull
         }
     }
 
