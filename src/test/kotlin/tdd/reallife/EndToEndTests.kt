@@ -16,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxOptions
 class EndToEndTests {
 
     private var app = App()
+    private val s3Endpoint = "http://localhost:4566"
     private lateinit var browser: WebDriver
 
     @BeforeEach
@@ -57,7 +58,7 @@ class EndToEndTests {
             assertThat(browser.findElement(id("button-external"))).isNotNull
             assertThat(browser.findElements(className("cart-item"))).isEmpty()
 
-            assertThat(BillFromStore().exist("bill_1.txt")).isNotNull
+            assertThat(BillFromStore(s3Endpoint).exist("bill_1.txt")).isNotNull
         }
     }
 

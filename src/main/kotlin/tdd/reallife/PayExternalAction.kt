@@ -6,14 +6,19 @@ import daikon.core.Request
 import daikon.core.Response
 import daikon.core.RouteAction
 
-class PayExternalAction(private val paymentAdapter: PaymentAdapter, private val cartRepository: CartRepository) :
+class PayExternalAction(
+    private val paymentAdapter: PaymentAdapter,
+    private val cartRepository: CartRepository,
+    private val billRepository: BillRepository
+) :
     RouteAction {
 
     override fun handle(request: Request, response: Response, context: Context) {
-        val euro = request.param("price").toInt()
+        val price = request.param("price").toInt()
         try {
-            paymentAdapter.pay(euro)
+            paymentAdapter.pay(price)
             cartRepository.empty()
+            billRepository.save(price)
         } catch (t: Throwable) {
         }
 

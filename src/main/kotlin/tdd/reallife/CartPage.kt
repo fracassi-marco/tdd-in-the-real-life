@@ -7,11 +7,11 @@ import daikon.core.RouteAction
 import daikon.freemarker.html
 import topinambur.http
 
-class CartPage : RouteAction {
+class CartPage(private val cartRepository: CartRepository) : RouteAction {
 
     override fun handle(request: Request, response: Response, context: Context) {
         val products = loadProducts()
-        val cartItems = loadCart()
+        val cartItems = cartRepository.load()
 
         products.forEach {
             val priceResponse = "http://www.randomnumberapi.com/api/v1.0/random?min=1&max=10&id=${it.name}".http.get()
@@ -26,19 +26,6 @@ class CartPage : RouteAction {
                 "total" to cartItems.sumBy { it.price }
             )
         )
-    }
-
-    private fun loadCart(): List<CartItem> {
-        val results = DbConnection().create().use {
-            it.prepareStatement("SELECT * FROM cart").executeQuery()
-        }
-
-        val items = mutableListOf<CartItem>()
-        while (results.next()) {
-            items.add(CartItem(results.getString("name"), results.getInt("price")))
-        }
-
-        return items
     }
 
     private fun loadProducts(): List<Product> {
