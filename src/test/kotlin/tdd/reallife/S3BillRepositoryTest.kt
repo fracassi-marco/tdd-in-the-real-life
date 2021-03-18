@@ -1,6 +1,5 @@
 package tdd.reallife
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -17,14 +16,13 @@ class S3BillRepositoryTest {
     fun fileExistsOnS3() {
         S3BillRepository(s3Endpoint).save(4)
 
-        BillFromStore(s3Endpoint).exist("bill_1.txt")
+        S3Object(s3Endpoint, "bills", "bill_1.txt").assertExists()
     }
 
     @Test
     fun contentIsTotalPrice() {
         S3BillRepository(s3Endpoint).save(8)
 
-        val content = BillFromStore(s3Endpoint).read("bill_1.txt")
-        assertThat(content).isEqualTo("8")
+        S3Object(s3Endpoint, "bills", "bill_1.txt").assertContentIsEqualTo("8")
     }
 }

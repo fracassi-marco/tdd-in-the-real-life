@@ -25,7 +25,7 @@ class EndToEndTests {
         WebDriverManager.firefoxdriver().setup()
         browser = FirefoxDriver(FirefoxOptions().setHeadless(true))
         app.start()
-        cleanCart()
+        DbCartRepository(connection).empty()
         insertProduct("Potato")
     }
 
@@ -59,13 +59,7 @@ class EndToEndTests {
             assertThat(browser.findElement(id("button-external"))).isNotNull
             assertThat(browser.findElements(className("cart-item"))).isEmpty()
 
-            assertThat(BillFromStore(s3Endpoint).exist("bill_1.txt")).isNotNull
-        }
-    }
-
-    private fun cleanCart() {
-        connection.create().use {
-            it.prepareStatement("TRUNCATE TABLE cart").execute()
+            S3Object(s3Endpoint, "bills", "bill_1.txt").assertExists()
         }
     }
 

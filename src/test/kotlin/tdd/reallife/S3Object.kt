@@ -1,5 +1,6 @@
 package tdd.reallife
 
+import org.assertj.core.api.Assertions.assertThat
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
@@ -10,14 +11,18 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URI
 
-class BillFromStore(private val endpoint: String) {
+class S3Object(private val endpoint: String, private val bucket: String, private val filename: String) {
 
-    fun exist(filename: String): Boolean {
-        return s3Client().getObject(GetObjectRequest.builder().bucket("bills").key(filename).build()) != null
+    fun assertExists() {
+        assertThat(read()).isNotNull
     }
 
-    fun read(filename: String): String {
-        val request = GetObjectRequest.builder().bucket("bills").key(filename).build()
+    fun assertContentIsEqualTo(expected: String) {
+        assertThat(read()).isEqualTo(expected)
+    }
+
+    private fun read(): String {
+        val request = GetObjectRequest.builder().bucket(bucket).key(filename).build()
         val response = s3Client().getObject(request)
         BufferedReader(InputStreamReader(response)).use {
             return it.readText()
