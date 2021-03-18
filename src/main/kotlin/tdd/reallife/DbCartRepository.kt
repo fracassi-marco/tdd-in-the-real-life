@@ -1,13 +1,13 @@
 package tdd.reallife
 
-class DbCartRepository : CartRepository {
+class DbCartRepository(private val connection: DbConnection) : CartRepository {
 
     override fun empty() {
-        DbConnection().create().use { it.prepareStatement("TRUNCATE TABLE cart").execute() }
+        connection.create().use { it.prepareStatement("TRUNCATE TABLE cart").execute() }
     }
 
     override fun save(cartItem: CartItem) {
-        DbConnection().create().use {
+        connection.create().use {
             it.prepareStatement("INSERT INTO cart VALUES (?, ?)").apply {
                 setString(1, cartItem.name)
                 setInt(2, cartItem.price)
@@ -16,7 +16,7 @@ class DbCartRepository : CartRepository {
     }
 
     override fun load(): List<CartItem> {
-        val results = DbConnection().create().use {
+        val results = connection.create().use {
             it.prepareStatement("SELECT * FROM cart").executeQuery()
         }
 

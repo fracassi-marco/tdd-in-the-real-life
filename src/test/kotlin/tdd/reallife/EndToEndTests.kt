@@ -17,6 +17,7 @@ class EndToEndTests {
 
     private var app = App()
     private val s3Endpoint = "http://localhost:4566"
+    private val connection = DbConnection("localhost:5432")
     private lateinit var browser: WebDriver
 
     @BeforeEach
@@ -63,19 +64,19 @@ class EndToEndTests {
     }
 
     private fun cleanCart() {
-        DbConnection().create().use {
+        connection.create().use {
             it.prepareStatement("TRUNCATE TABLE cart").execute()
         }
     }
 
     private fun insertProduct(name: String) {
-        DbConnection().create().use {
+        connection.create().use {
             it.prepareStatement("INSERT INTO products VALUES ('$name', 'very good', 'http://any.img')").execute()
         }
     }
 
     private fun deleteProduct(name: String) {
-        DbConnection().create().use {
+        connection.create().use {
             it.prepareStatement("DELETE FROM products WHERE name = '$name'").execute()
         }
     }

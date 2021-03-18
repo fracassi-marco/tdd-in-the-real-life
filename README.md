@@ -12,5 +12,5 @@
 
 ## Desired features:
 * pay with external service and if payment succeeded empty cart
-* if payment succeeded save bill results on S3
-* send message `payment_succedeed` on SQS `events_queue`
+* if payment succeeded save bill results on S3 bucket `bills`
+* if cart has more than three items send `big_cart` message on SQS `events_queue`

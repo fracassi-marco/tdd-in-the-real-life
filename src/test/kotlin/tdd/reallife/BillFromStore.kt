@@ -16,19 +16,19 @@ class BillFromStore(private val endpoint: String) {
         return s3Client().getObject(GetObjectRequest.builder().bucket("bills").key(filename).build()) != null
     }
 
-    private fun s3Client(): S3Client {
-        val credentialsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create("ignore", "ignore"))
-        return builder().credentialsProvider(credentialsProvider)
-            .endpointOverride(URI(endpoint))
-            .region(Region.AWS_GLOBAL)
-            .build()
-    }
-
     fun read(filename: String): String {
         val request = GetObjectRequest.builder().bucket("bills").key(filename).build()
         val response = s3Client().getObject(request)
         BufferedReader(InputStreamReader(response)).use {
             return it.readText()
         }
+    }
+
+    private fun s3Client(): S3Client {
+        val credentialsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create("ignore", "ignore"))
+        return builder().credentialsProvider(credentialsProvider)
+            .endpointOverride(URI(endpoint))
+            .region(Region.AWS_GLOBAL)
+            .build()
     }
 }
