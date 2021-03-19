@@ -13,10 +13,11 @@ class App : AutoCloseable {
         val cartRepository = DbCartRepository(dbConnection)
         val productRepository = DbProductRepository(dbConnection)
         val billRepository = S3BillRepository("http://localhost:4566").init()
+        val eventRepository = SqsEventRepository("http://localhost:4566").init()
         val paymentAdapter = HttpPaymentAdapter("http://localhost:4546")
 
         get("/", CartPage(cartRepository, productRepository))
-        post("/add-to-cart", AddToCartAction(cartRepository))
+        post("/add-to-cart", AddToCartAction(cartRepository, eventRepository))
         post("/pay-by-cash", PayByCashAction(cartRepository, billRepository))
         post("/pay-external", PayExternalAction(paymentAdapter, cartRepository, billRepository))
     }

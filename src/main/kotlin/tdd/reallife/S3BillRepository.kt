@@ -10,7 +10,6 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.net.URI
 
-
 class S3BillRepository(private val endpoint: String) : BillRepository {
 
     override fun save(price: Int) {

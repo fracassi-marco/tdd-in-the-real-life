@@ -16,8 +16,9 @@ import org.openqa.selenium.firefox.FirefoxOptions
 class EndToEndTests {
 
     private var app = App()
-    private val s3Endpoint = "http://localhost:4566"
+    private val awsEndpoint = "http://localhost:4566"
     private val connection = DbConnection("localhost:5432")
+    private val sqsMessage = SqsMessage(awsEndpoint, "events_queue")
     private lateinit var browser: WebDriver
 
     @BeforeEach
@@ -25,6 +26,7 @@ class EndToEndTests {
         WebDriverManager.firefoxdriver().setup()
         browser = FirefoxDriver(FirefoxOptions().setHeadless(true))
         app.start()
+        sqsMessage.empty()
         DbCartRepository(connection).empty()
         insertProduct("Potato")
     }
@@ -59,8 +61,19 @@ class EndToEndTests {
             assertThat(browser.findElement(id("button-external"))).isNotNull
             assertThat(browser.findElements(className("cart-item"))).isEmpty()
 
-            S3Object(s3Endpoint, "bills", "bill_1.txt").assertExists()
+            S3Object(awsEndpoint, "bills", "bill_1.txt").assertExists()
         }
+    }
+
+    @Test
+    fun bigCart() {
+        browser.get("http://localhost:4545/")
+        browser.findElement(id("button-Potato")).click()
+        browser.findElement(id("button-Potato")).click()
+        browser.findElement(id("button-Potato")).click()
+        browser.findElement(id("button-Potato")).click()
+
+        SqsMessage(awsEndpoint, "events_queue").assertExists("big_cart_created")
     }
 
     private fun insertProduct(name: String) {
