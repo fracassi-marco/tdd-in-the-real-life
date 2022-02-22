@@ -12,6 +12,7 @@ import org.openqa.selenium.By.className
 import org.openqa.selenium.By.id
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 
 class EndToEndTests {
 
@@ -24,7 +25,7 @@ class EndToEndTests {
     @BeforeEach
     fun beforeEach() {
         WebDriverManager.chromedriver().setup()
-        browser = ChromeDriver()
+        browser = ChromeDriver(headless())
         app.start()
         sqsMessage.empty()
         DbCartRepository(connection).empty()
@@ -106,4 +107,6 @@ class EndToEndTests {
     private fun assertThatItemIsIntoCart(item: String) {
         assertThat(browser.findElements(className("cart-item")).single().text).isEqualTo(item)
     }
+
+    private fun headless() = ChromeOptions().addArguments("--headless")
 }

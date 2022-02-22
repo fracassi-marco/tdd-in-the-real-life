@@ -14,14 +14,14 @@ class PayExternalAction(
     RouteAction {
 
     override fun handle(request: Request, response: Response, context: Context) {
-        val price = request.param("price").toInt()
         try {
+            val price = request.param("price").toInt()
             paymentAdapter.pay(price)
             cartRepository.empty()
             billRepository.save(price)
+            response.redirect("http://localhost:4545/", MOVED_PERMANENTLY_301)
         } catch (t: Throwable) {
+            t.printStackTrace()
         }
-
-        response.redirect("http://localhost:4545/", MOVED_PERMANENTLY_301)
     }
 }
