@@ -7,11 +7,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.openqa.selenium.By
 import org.openqa.selenium.By.className
 import org.openqa.selenium.By.id
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.chrome.ChromeDriver
 
 class EndToEndTests {
 
@@ -23,8 +23,8 @@ class EndToEndTests {
 
     @BeforeEach
     fun beforeEach() {
-        WebDriverManager.firefoxdriver().setup()
-        browser = FirefoxDriver(FirefoxOptions().setHeadless(true))
+        WebDriverManager.chromedriver().setup()
+        browser = ChromeDriver()
         app.start()
         sqsMessage.empty()
         DbCartRepository(connection).empty()
@@ -40,12 +40,12 @@ class EndToEndTests {
 
     @Test
     fun payByCash() {
-        browser.get("http://localhost:4545/")
-        browser.findElement(id("button-Potato")).click()
-        assertThat(browser.findElements(className("cart-item")).single().text).isEqualTo("Potato")
+        openHomePage()
+        clickOn(id("button-Potato"))
+        assertThatItemIsIntoCart("Potato")
 
-        browser.findElement(id("button-cash")).click()
-        assertThat(browser.findElements(className("cart-item"))).isEmpty()
+        clickOn(id("button-cash"))
+        assertThatCartIsEmpty()
     }
 
     @Test
@@ -53,32 +53,39 @@ class EndToEndTests {
         HttpServer(4546) {
             post("/") { _, res, _ -> res.status(OK_200) }
         }.start().use {
-            browser.get("http://localhost:4545/")
-            browser.findElement(id("button-Potato")).click()
-            assertThat(browser.findElements(className("cart-item")).single().text).isEqualTo("Potato")
+            openHomePage()
+            clickOn(id("button-Potato"))
+            assertThatItemIsIntoCart("Potato")
 
-            browser.findElement(id("button-external")).click()
-            assertThat(browser.findElement(id("button-external"))).isNotNull
-            assertThat(browser.findElements(className("cart-item"))).isEmpty()
+            clickOn(id("button-external"))
+            assertThatCartIsEmpty()
 
-            S3Object(awsEndpoint, "bills", "bill_1.txt").assertExists()
+            assertBillsExistsOnS3("bill_1.txt")
         }
     }
 
     @Test
     fun bigCart() {
-        browser.get("http://localhost:4545/")
-        browser.findElement(id("button-Potato")).click()
-        browser.findElement(id("button-Potato")).click()
-        browser.findElement(id("button-Potato")).click()
-        browser.findElement(id("button-Potato")).click()
+        openHomePage()
+        clickOn(id("button-Potato"))
+        clickOn(id("button-Potato"))
+        clickOn(id("button-Potato"))
+        clickOn(id("button-Potato"))
 
         SqsMessage(awsEndpoint, "events_queue").assertExists("big_cart_created")
     }
 
+    private fun clickOn(id: By?) {
+        browser.findElement(id).click()
+    }
+
+    private fun openHomePage() {
+        browser.get("http://localhost:4545/")
+    }
+
     private fun insertProduct(name: String) {
         connection.create().use {
-            it.prepareStatement("INSERT INTO products VALUES ('$name', 'very good', 'http://any.img')").execute()
+            it.prepareStatement("INSERT INTO products VALUES ('$name', 'very good', 'http://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/potato.png')").execute()
         }
     }
 
@@ -86,5 +93,17 @@ class EndToEndTests {
         connection.create().use {
             it.prepareStatement("DELETE FROM products WHERE name = '$name'").execute()
         }
+    }
+
+    private fun assertBillsExistsOnS3(fileName: String) {
+        S3Object(awsEndpoint, "bills", fileName).assertExists()
+    }
+
+    private fun assertThatCartIsEmpty() {
+        assertThat(browser.findElements(className("cart-item"))).isEmpty()
+    }
+
+    private fun assertThatItemIsIntoCart(item: String) {
+        assertThat(browser.findElements(className("cart-item")).single().text).isEqualTo(item)
     }
 }

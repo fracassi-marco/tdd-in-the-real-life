@@ -145,6 +145,7 @@
                     <hr>
                     <div class="d-flex justify-content-between information"><span style="font-size:1.2em;">TOTAL</span><span id="total" style="font-size:1.2em;">${total}€</span></div>
                     <form method="post" action="/pay-by-cash">
+                        <input type="hidden" name="price" value="${total}">
                         <button id="button-cash" class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span>Pay by cash<i class="fa fa-long-arrow-right ml-1"></i></span></button>
                     </form>
                     <form method="post" action="/pay-external">
