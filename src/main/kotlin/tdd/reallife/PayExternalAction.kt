@@ -19,9 +19,9 @@ class PayExternalAction(
             paymentAdapter.pay(price)
             cartRepository.empty()
             billRepository.save(price)
-            response.redirect("http://localhost:4545/", MOVED_PERMANENTLY_301)
         } catch (t: Throwable) {
             t.printStackTrace()
         }
+        response.redirect("http://localhost:4545/", MOVED_PERMANENTLY_301)
     }
 }

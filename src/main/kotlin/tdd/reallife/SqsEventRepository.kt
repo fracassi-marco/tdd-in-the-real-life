@@ -27,7 +27,7 @@ class SqsEventRepository(private val endpoint: String) : EventRepository {
         val credentialsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create("ignore", "ignore"))
         return SqsClient.builder().credentialsProvider(credentialsProvider)
             .endpointOverride(URI(endpoint))
-            .region(Region.AWS_GLOBAL)
+            .region(Region.AP_EAST_1)
             .build()
     }
 }

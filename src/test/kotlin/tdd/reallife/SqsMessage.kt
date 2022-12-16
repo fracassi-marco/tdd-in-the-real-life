@@ -3,6 +3,7 @@ package tdd.reallife
 import org.assertj.core.api.Assertions.assertThat
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.regions.Region.AWS_GLOBAL
 import software.amazon.awssdk.services.sqs.SqsClient
 import software.amazon.awssdk.services.sqs.model.*
@@ -29,7 +30,7 @@ class SqsMessage(private val endpoint: String, private val queue: String) {
         val credentialsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create("ignore", "ignore"))
         return SqsClient.builder().credentialsProvider(credentialsProvider)
             .endpointOverride(URI(endpoint))
-            .region(AWS_GLOBAL)
+            .region(Region.AP_EAST_1)
             .build()
     }
 }

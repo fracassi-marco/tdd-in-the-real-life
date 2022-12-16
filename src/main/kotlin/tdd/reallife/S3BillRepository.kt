@@ -6,6 +6,7 @@ import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.BucketAlreadyExistsException
+import software.amazon.awssdk.services.s3.model.BucketAlreadyOwnedByYouException
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.net.URI
@@ -21,6 +22,7 @@ class S3BillRepository(private val endpoint: String) : BillRepository {
         try {
             s3Client().createBucket(CreateBucketRequest.builder().bucket("bills").build())
         } catch (e: BucketAlreadyExistsException) {
+        } catch (e: BucketAlreadyOwnedByYouException) {
         }
 
         return this
